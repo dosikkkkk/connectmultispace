@@ -4,46 +4,72 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Coworking</title>
+
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.css">
 <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.7/build/pannellum.js"></script>
+
 <style>
     html, body {
-        margin: 0; padding: 0; width: 100%; height: 100%;
-        overflow: hidden; background-color: #000;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
         font-family: 'Arial', sans-serif;
         touch-action: none;
     }
 
     #viewer {
-        position: absolute; inset: 0;
+        position: absolute;
+        inset: 0;
     }
 
     .label {
-        position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-        color: white; background: rgba(0,0,0,0.6); padding: 10px 30px;
-        border-radius: 40px; font-weight: bold; z-index: 100;
-        text-transform: uppercase; border: 1px solid rgba(255,255,255,0.2);
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0,0,0,0.6);
+        padding: 10px 30px;
+        border-radius: 40px;
+        font-weight: bold;
+        z-index: 100;
+        text-transform: uppercase;
+        border: 1px solid rgba(255,255,255,0.2);
         pointer-events: none;
     }
 
     #menu {
-        position: absolute; bottom: 20px; left: 50%;
-        transform: translateX(-50%); display: flex;
-        gap: 12px; z-index: 999; padding: 10px 20px;
-        background: rgba(0, 0, 0, 0.85); border-radius: 50px;
-        overflow-x: auto; max-width: 90vw;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 999;
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.85);
+        border-radius: 50px;
+        overflow-x: auto;
+        max-width: 90vw;
         border: 1px solid rgba(255,255,255,0.2);
         backdrop-filter: blur(10px);
         padding-bottom: 12px;
     }
 
-    #menu::-webkit-scrollbar { height: 7px; }
+    #menu::-webkit-scrollbar {
+        height: 7px;
+    }
+
     #menu::-webkit-scrollbar-track {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 10px;
         margin: 0 25px;
     }
+
     #menu::-webkit-scrollbar-thumb {
         background: #0D47A1;
         border-radius: 10px;
@@ -51,28 +77,42 @@
 
     #menu button {
         cursor: pointer;
-        white-space: nowrap; color: white;
-        font-weight: bold; font-size: 13px; padding: 10px 22px;
-        background: rgba(255,255,255,0.1); border-radius: 25px;
-        border: 1px solid transparent; transition: all 0.3s;
+        white-space: nowrap;
+        color: white;
+        font-weight: bold;
+        font-size: 13px;
+        padding: 10px 22px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 25px;
+        border: 1px solid transparent;
+        transition: all 0.3s;
     }
-    #menu button:hover { background: rgba(255,255,255,0.2); }
-    #menu button.active { background: #0D47A1; border-color: #fff; }
 
-    /* ---- Экран загрузки pannellum: убираем текст с процентами/МБ,
-       оставляем только чистую полоску прогресса в цветах меню ---- */
+    #menu button:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    #menu button.active {
+        background: #0D47A1;
+        border-color: #fff;
+    }
+
+    /* Экран загрузки Pannellum */
     .pnlm-lmsg,
     .pnlm-lbox-icon {
         display: none !important;
     }
+
     .pnlm-load-box {
         background: transparent !important;
         box-shadow: none !important;
         width: auto !important;
     }
+
     .pnlm-lbar-container {
         width: 220px !important;
     }
+
     .pnlm-lbar {
         height: 4px !important;
         background: rgba(255,255,255,0.15) !important;
@@ -80,24 +120,27 @@
         overflow: hidden;
         border: none !important;
     }
+
     .pnlm-lbar-fill {
         background: #0D47A1 !important;
     }
 
-    /* Полностью скрываем всплывающее окно "Pannellum x.x.x" по ПКМ */
+    /* Скрываем окно "Pannellum x.x.x" по ПКМ */
     .pnlm-about-msg {
         display: none !important;
     }
 
-    /* Дополнительно скрываем сам элемент управления, отвечающий за контекстное меню */
     .pnlm-controls-container {
         pointer-events: none;
     }
-    #menu, #menu button {
+
+    #menu,
+    #menu button {
         pointer-events: auto;
     }
 </style>
 </head>
+
 <body>
 
 <div class="label" id="t">ENTRANCE</div>
@@ -107,23 +150,78 @@
 <div id="menu"></div>
 
 <script>
+
 const scenes = {
-    entrance: { title: "Entrance", panorama: "entrance.jpeg", yaw: -12, pitch: 5 },
-    hall:     { title: "Hall",     panorama: "hall.jpeg",     yaw: -25, pitch: -5 },
-    ceo:      { title: "CEO",      panorama: "ceo.jpeg",      yaw: 179, pitch: -10 },
-    boss:     { title: "Boss",     panorama: "boss.jpeg",     yaw: -165, pitch: -10 },
-    power:    { title: "Power",    panorama: "power.jpeg",    yaw: 175, pitch: -15 },
-    team:     { title: "Team",     panorama: "team.jpeg",     yaw: -50, pitch: 0 }
+
+    entrance: {
+        title: "Entrance",
+        panorama: "entrance.jpeg",
+        yaw: -12,
+        pitch: 5
+    },
+
+    hall: {
+        title: "Hall",
+        panorama: "hall.jpeg",
+        yaw: -25,
+        pitch: -5
+    },
+
+    ceo: {
+        title: "CEO",
+        panorama: "ceo.jpeg",
+        yaw: 179,
+        pitch: -10
+    },
+
+    boss: {
+        title: "Boss",
+        panorama: "boss.jpeg",
+        yaw: -165,
+        pitch: -10
+    },
+
+    power: {
+        title: "Power",
+        panorama: "power.jpeg",
+        yaw: 175,
+        pitch: -15
+    },
+
+    team: {
+        title: "Team",
+        panorama: "team.jpeg",
+        yaw: -50,
+        pitch: 0
+    },
+
+    pro1: {
+        title: "Pro1",
+        panorama: "pro1.jpeg",
+        yaw: 0,
+        pitch: 0
+    },
+
+    pro2: {
+        title: "Pro2",
+        panorama: "pro2.jpeg",
+        yaw: 0,
+        pitch: 0
+    }
+
 };
 
-// На ПК ставим больший угол обзора (немного отдалено),
-// на телефоне оставляем стандартный — там и так нормально видно
+
+// На ПК ставим больший угол обзора
 const isDesktop = window.innerWidth > 768;
+
 const defaultHfov = isDesktop ? 115 : 100;
 const maxHfov = isDesktop ? 130 : 120;
 
-// Сразу грузим первую сцену при открытии страницы
+
+// Создание Pannellum
 const viewer = pannellum.viewer('viewer', {
+
     default: {
         firstScene: 'entrance',
         sceneFadeDuration: 800,
@@ -132,40 +230,75 @@ const viewer = pannellum.viewer('viewer', {
         maxHfov: maxHfov,
         showControls: true
     },
+
     scenes: scenes
+
 });
+
 
 const menu = document.getElementById('menu');
 const t = document.getElementById('t');
 
-// ---- Полная блокировка контекстного меню Pannellum (ПКМ) ----
-// Вешаем обработчик и на viewer, и на весь document в фазе capture,
-// чтобы гарантированно перехватить событие раньше самого Pannellum.
+
+// Полная блокировка контекстного меню
 function blockContextMenu(e) {
+
     e.preventDefault();
     e.stopPropagation();
-    if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+    if (e.stopImmediatePropagation) {
+        e.stopImmediatePropagation();
+    }
+
     return false;
 }
-document.getElementById('viewer').addEventListener('contextmenu', blockContextMenu, true);
-document.addEventListener('contextmenu', blockContextMenu, true);
 
+
+document
+    .getElementById('viewer')
+    .addEventListener('contextmenu', blockContextMenu, true);
+
+document
+    .addEventListener('contextmenu', blockContextMenu, true);
+
+
+// Активная кнопка
 function setActive(btn) {
-    document.querySelectorAll('#menu button').forEach(b => b.classList.remove('active'));
+
+    document
+        .querySelectorAll('#menu button')
+        .forEach(b => b.classList.remove('active'));
+
     btn.classList.add('active');
 }
 
+
+// Создание меню
 for (const key in scenes) {
+
     const btn = document.createElement('button');
+
     btn.textContent = scenes[key].title;
-    if (key === 'entrance') btn.classList.add('active');
+
+    if (key === 'entrance') {
+        btn.classList.add('active');
+    }
+
     btn.onclick = () => {
+
         viewer.loadScene(key);
-        t.textContent = scenes[key].title.toUpperCase();
+
+        t.textContent =
+            scenes[key].title.toUpperCase();
+
         setActive(btn);
+
     };
+
     menu.appendChild(btn);
 }
+
 </script>
+
 </body>
 </html>
