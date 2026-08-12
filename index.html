@@ -97,7 +97,6 @@
         border-color: #fff;
     }
 
-    /* Экран загрузки Pannellum */
     .pnlm-lmsg,
     .pnlm-lbox-icon {
         display: none !important;
@@ -125,7 +124,6 @@
         background: #0D47A1 !important;
     }
 
-    /* Скрываем окно "Pannellum x.x.x" по ПКМ */
     .pnlm-about-msg {
         display: none !important;
     }
@@ -167,25 +165,11 @@ const scenes = {
         pitch: -5
     },
 
-    ceo: {
-        title: "CEO",
-        panorama: "ceo.jpeg",
-        yaw: 179,
-        pitch: -10
-    },
-
     boss: {
         title: "Boss",
         panorama: "boss.jpeg",
         yaw: -165,
         pitch: -10
-    },
-
-    power: {
-        title: "Power",
-        panorama: "power.jpeg",
-        yaw: 175,
-        pitch: -15
     },
 
     team: {
@@ -195,31 +179,43 @@ const scenes = {
         pitch: 0
     },
 
+    power: {
+        title: "Power",
+        panorama: "power.jpeg",
+        yaw: 175,
+        pitch: -15
+    },
+
+    ceo: {
+        title: "CEO",
+        panorama: "ceo.jpeg",
+        yaw: 179,
+        pitch: -10
+    },
+
     pro1: {
         title: "Pro1",
         panorama: "pro1.jpeg",
-        yaw: -133,
-        pitch: -15
+        yaw: 0,
+        pitch: 0
     },
 
     pro2: {
         title: "Pro2",
         panorama: "pro2.jpeg",
-        yaw: -51,
-        pitch: -21
+        yaw: 0,
+        pitch: 0
     }
 
 };
 
 
-// На ПК ставим больший угол обзора
 const isDesktop = window.innerWidth > 768;
 
 const defaultHfov = isDesktop ? 115 : 100;
 const maxHfov = isDesktop ? 130 : 120;
 
 
-// Создание Pannellum
 const viewer = pannellum.viewer('viewer', {
 
     default: {
@@ -240,7 +236,6 @@ const menu = document.getElementById('menu');
 const t = document.getElementById('t');
 
 
-// Полная блокировка контекстного меню
 function blockContextMenu(e) {
 
     e.preventDefault();
@@ -262,7 +257,6 @@ document
     .addEventListener('contextmenu', blockContextMenu, true);
 
 
-// Активная кнопка
 function setActive(btn) {
 
     document
@@ -273,7 +267,6 @@ function setActive(btn) {
 }
 
 
-// Создание меню
 for (const key in scenes) {
 
     const btn = document.createElement('button');
