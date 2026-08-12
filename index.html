@@ -105,8 +105,8 @@ const scenes = {
 // На ПК ставим больший угол обзора (сильнее отдалено),
 // на телефоне оставляем стандартный — там и так нормально видно
 const isDesktop = window.innerWidth > 768;
-const defaultHfov = isDesktop ? 140 : 100;
-const maxHfov = isDesktop ? 150 : 120;
+const defaultHfov = isDesktop ? 115 : 100;
+const maxHfov = isDesktop ? 130 : 120;
 
 // Сразу грузим первую сцену при открытии страницы
 const viewer = pannellum.viewer('viewer', {
