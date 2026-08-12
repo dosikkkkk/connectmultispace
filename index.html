@@ -95,16 +95,28 @@
 
 <script>
 const scenes = {
-    entrance: { title: "Entrance", panorama: "entrance.jpeg", yaw: -10,   pitch: 0 },
-    hall:     { title: "Hall",     panorama: "hall.jpeg",     yaw: -25,   pitch: 0 },
-    ceo:      { title: "CEO",      panorama: "ceo.jpeg",      yaw: 178,   pitch: 0 },
-    boss:     { title: "Boss",     panorama: "boss.jpeg",     yaw: -172,   pitch: 0 },
-    team:     { title: "Team",     panorama: "team.jpeg",     yaw: -50,   pitch: 0 }
+    entrance: { title: "Entrance", panorama: "entrance.jpeg", yaw: -10,  pitch: 0 },
+    hall:     { title: "Hall",     panorama: "hall.jpeg",     yaw: -25,  pitch: 0 },
+    ceo:      { title: "CEO",      panorama: "ceo.jpeg",      yaw: 178,  pitch: 0 },
+    boss:     { title: "Boss",     panorama: "boss.jpeg",     yaw: -172, pitch: 0 },
+    team:     { title: "Team",     panorama: "team.jpeg",     yaw: -50,  pitch: 0 }
 };
+
+// На ПК ставим больший угол обзора (сильнее отдалено),
+// на телефоне оставляем стандартный — там и так нормально видно
+const isDesktop = window.innerWidth > 768;
+const defaultHfov = isDesktop ? 140 : 100;
+const maxHfov = isDesktop ? 150 : 120;
 
 // Сразу грузим первую сцену при открытии страницы
 const viewer = pannellum.viewer('viewer', {
-    default: { firstScene: 'entrance', sceneFadeDuration: 800, autoLoad: true },
+    default: {
+        firstScene: 'entrance',
+        sceneFadeDuration: 800,
+        autoLoad: true,
+        hfov: defaultHfov,
+        maxHfov: maxHfov
+    },
     scenes: scenes
 });
 
